@@ -86,7 +86,7 @@ If one of the servers needs to be temporarily removed from the load‑balancing 
     ```
 The optional `consistent` parameter to the hash directive enables `ketama` consistent‑hash load balancing. Requests are evenly distributed across all upstream servers based on the user‑defined hashed key value. If an upstream server is added to or removed from an upstream group, only a few keys are remapped which minimizes cache misses in the case of load‑balancing cache servers or other applications that accumulate state.
 
-Least Time (NGINX Plus only) – For each request, NGINX Plus selects the server with the lowest average latency and the lowest number of active connections, where the lowest average latency is calculated based on which of the following `parameters` to the least_time directive is included:
+* *Least Time* (NGINX Plus only) – For each request, NGINX Plus selects the server with the lowest average latency and the lowest number of active connections, where the lowest average latency is calculated based on which of the following `parameters` to the least_time directive is included:
     * `header` – Time to receive the first byte from the server
     * `last_byte` – Time to receive the full response from the server
     * `last_byte` inflight – Time to receive the full response from the server, taking into account incomplete requests
@@ -123,7 +123,9 @@ upstream backend {
     server 192.0.0.1 backup;
 }
 ```
+
 In the example, *backend1.example.com* has weight `5`; the other two servers have the default weight (`1`), but the one with IP address `192.0.0.1` is marked as a backup server and does not receive requests unless both of the other servers are unavailable. With this configuration of weights, out of every `6` requests, `5` are sent to *backend1.example.com* and `1` to *backend2.example.com*.
+
 ----
 ### Server Slow-Start
 The server slow‑start feature prevents a recently recovered server from being overwhelmed by connections, which may time out and cause the server to be marked as failed again.
@@ -198,6 +200,7 @@ If there are several NGINX instances in a cluster that use the “sticky learn�
            sync;
     }
     ```
+
 ----
 
 ### Limiting the Number of Connections
