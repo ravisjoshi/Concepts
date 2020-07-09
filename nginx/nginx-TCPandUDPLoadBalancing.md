@@ -201,8 +201,192 @@ stream {
 
 ----
 
+### On-the-Fly Configuration
+
+Upstream server groups can be easily reconfigured on-the-fly using NGINX Plus REST API. Using this interface, you can view all servers in an upstream group or a particular server, modify server parameters, and add or remove upstream servers.
+
+To enable on-the-fly configuration:
+    1. Create the top-level `http {}` block or make sure it is present in your configuration:
+    ```
+    http {
+        # ...
+    }
+    ```
+    2. Create a location for configuration requests, for example, api:
+    ```
+    http {
+        server {
+            location /api {
+                # ...
+            }
+        }
+    }
+    ```
+    3. In this location specify the `api` directive:
+    ```
+    http {
+        server {
+            location /api {
+                api;
+                # ...
+            }
+        }
+    }
+    ```
+    4. By default, the NGINX Plus API provides read-only access to data. The `write=on` parameter enables read/write access so that changes can be made to upstreams:
+    ```
+    http {
+        server {
+            location /api {
+                api  write=on;
+                # ...
+            }
+        }
+    }
+    ```
+    5. Limit access to this location with allow and deny directives:
+    ```
+    http {
+        server {
+            location /api {
+                api   write=on;
+                allow 127.0.0.1; # permit access from localhost
+                deny  all;       # deny access from everywhere else
+            }
+        }
+    }
+    ```
+    6. When the API is enabled in the write mode, it is recommended restricting access to `PATCH`, `POST`, and `DELETE` methods to particular users. This can be done by implementing HTTP basic authentication:
+    ```
+    http {
+        server {
+            location /api {
+                limit_except GET {
+                    auth_basic "NGINX Plus API";
+                    auth_basic_user_file /path/to/passwd/file;
+                }
+                api   write=on;
+                allow 127.0.0.1;
+                deny  all;
+            }
+        }
+    }
+    ```
+    7. Create a shared memory zone for the group of upstream servers so that all worker processes can use the same configuration. To do this, in the top-level `stream {}` block, find the target upsteam group, add the `zone` directive to the upstream server group and specify the zone name (here, `stream_backend`) and the amount of memory (64 KB):
+    ```
+    stream {
+        upstream stream_backend {
+            zone backend 64k;
+            # ...
+        }
+    }
+    ```
 
 ----
 
+### On-the-Fly Configuration Example
+```
+stream {
+    # ...
+    # Configuration of an upstream server group
+    upstream appservers {
+        zone appservers 64k;
+        server appserv1.example.com:12345 weight=5;
+        server appserv2.example.com:12345 fail_timeout=5s;
+        server backup1.example.com:12345 backup;
+        server backup2.example.com:12345 backup;
+    }
+
+    server {
+        # Server that proxies connections to the upstream group
+        proxy_pass appservers;
+        health_check;
+    }
+}
+http {
+    # ...
+    server {
+        # Location for API requests
+        location /api {
+            limit_except GET {
+                auth_basic "NGINX Plus API";
+                auth_basic_user_file /path/to/passwd/file;
+            }
+            api write=on;
+            allow 127.0.0.1;
+            deny  all;
+        }
+    }
+}
+```
+Here, access to the location is allowed only from the localhost address (`127.0.0.1`). Access from all other IP addresses is denied.
+To pass a configuration command to NGINX, send an API command by any method, for example, with curl.
+For example, to add a new server to the server group, send a `POST` request:
+```
+curl -X POST -d '{ \
+   "server": "appserv3.example.com:12345", \
+   "weight": 4 \
+ }' -s 'http://127.0.0.1/api/6/stream/upstreams/appservers/servers'
+```
+To remove a server from the server group, send a DELETE request:
+```
+curl -X DELETE -s 'http://127.0.0.1/api/6/stream/upstreams/appservers/servers/0'
+```
+To modify a parameter for a specific server, send a PATCH request:
+```
+curl -X PATCH -d '{ "down": true }' -s 'http://127.0.0.1/api/6/http/upstreams/appservers/servers/0'
+```
+
+----
+
+### Example of TCP and UDP Load-Balancing Configuration
+
+This is a configuration example of TCP and UDP load balancing with NGINX:
+```
+stream {
+    upstream stream_backend {
+        least_conn;
+        server backend1.example.com:12345 weight=5;
+        server backend2.example.com:12345 max_fails=2 fail_timeout=30s;
+        server backend3.example.com:12345 max_conns=3;
+    }
+
+    upstream dns_servers {
+        least_conn;
+        server 192.168.136.130:53;
+        server 192.168.136.131:53;
+        server 192.168.136.132:53;
+    }
+
+    server {
+        listen        12345;
+        proxy_pass    stream_backend;
+        proxy_timeout 3s;
+        proxy_connect_timeout 1s;
+    }
+
+    server {
+        listen     53 udp;
+        proxy_pass dns_servers;
+    }
+
+    server {
+        listen     12346;
+        proxy_pass backend4.example.com:12346;
+    }
+}
+```
+In this example, all TCP and UDP proxy‑related functionality is configured inside the `stream` block, just as settings for HTTP requests are configured in the `http` block.
+
+There are two named `upstream` blocks, each containing three servers that host the same content as one another. In the `server` for each server, the server name is followed by the obligatory port number. Connections are distributed among the servers according to the `Least Connections` load‑balancing method: a connection goes to the server with the fewest number of active connections.
+
+The three `server` blocks define three virtual servers:
+    * The first server listens on port 12345 and proxies all TCP connections to the `stream_backend` group of upstream servers. Note that the `proxy_pass` directive defined in the context of the stream module must not contain a protocol.
+
+    * Two optional timeout parameters are specified: the `proxy_connect_timeout` directive sets the timeout required for establishing a connection with a server in the `stream_backend` group. The `proxy_timeout` directive sets a timeout used after proxying to one of the servers in the `stream_backend` group has started.
+
+    * The second server listens on port 53 and proxies all UDP datagrams (the udp parameter to the `listen` directive) to an upstream group called `dns_servers`. If the udp parameter is not specified, the socket listens for TCP connections.
+
+    * The third virtual server listens on port 12346 and proxies TCP connections to `backend4.example.com`, which can resolve to several IP addresses that are load balanced with the Round Robin method.
 
 ----
