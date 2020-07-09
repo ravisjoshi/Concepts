@@ -156,7 +156,6 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
         }
         ```
         The `Hash` load‑balancing method is also used to configure session persistence. As the hash function is based on client IP address, connections from a given client are always passed to the same server unless the server is down or otherwise unavailable. Specify an optional `consistent` parameter to apply the `ketama` consistent hashing method:
-
         `hash $remote_addr consistent;`
 
     * *Random* – Each connection will be passed to a randomly selected server. If the two parameter is specified, first, NGINX randomly selects two servers taking into account server weights, and then chooses one of these servers using the specified method:
@@ -164,7 +163,7 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
         * `least_time=connect` (NGINX Plus) – The time to connect to the upstream server ($upstream_connect_time)
         * `least_time=first_byte` (NGINX Plus) – The least average time to receive the first byte of data from the server ($upstream_first_byte_time)
         * `least_time=last_byte` (NGINX Plus) – The least average time to receive the last byte of data from the server ($upstream_session_time)
-```
+        ```
         upstream stream_backend {
             random two least_time=last_byte;
             server backend1.example.com:12345;
@@ -172,11 +171,11 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
             server backend3.example.com:12346;
             server backend4.example.com:12346;
         }
-```
+        ```
 The *Random* load balancing method should be used for distributed environments where multiple load balancers are passing requests to the same set of backends. For environments where the load balancer has a full view of all requests, use other load balancing methods, such as round robin, least connections and least time.
 
 4. Optionally, for each upstream server specify server‑specific parameters including `maximum number of connections`, `server weight`, and so on:
-```
+    ```
     upstream stream_backend {
         hash   $remote_addr consistent;
         server backend1.example.com:12345 weight=5;
@@ -189,7 +188,7 @@ The *Random* load balancing method should be used for distributed environments w
         server 192.168.136.131:53;
         # ...
     }
-```
+    ```
 An alternative approach is to proxy traffic to a single server instead of an upstream group. If you identify the server by hostname, and configure the hostname to resolve to multiple IP addresses, then NGINX load balances traffic across the IP addresses using the `Round Robin` algorithm. In this case, you must specify the server’s port number in the `proxy_pass` directive and must not specify the protocol before IP address or hostname:
 ```
 stream {
