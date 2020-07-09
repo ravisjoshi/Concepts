@@ -128,11 +128,11 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
 ```
 3. Configure the load‑balancing method used by the upstream group. You can specify one of the following methods:
 
-    * *Round Robin* – By default, NGINX uses the Round Robin algorithm to load balance traffic, directing it sequentially to the servers in the configured upstream group. Because it is the default method, there is no round‑robin directive; simply create an `upstream {}` configuration block in the top‑level `stream {}` context and add server directives as described in the previous step.
+    * **Round Robin** – By default, NGINX uses the Round Robin algorithm to load balance traffic, directing it sequentially to the servers in the configured upstream group. Because it is the default method, there is no round‑robin directive; simply create an `upstream {}` configuration block in the top‑level `stream {}` context and add server directives as described in the previous step.
 
-    * *Least Connections* – NGINX selects the server with the smaller number of current active connections.
+    * **Least Connections** – NGINX selects the server with the smaller number of current active connections.
 
-    * *Least Time* (NGINX Plus only) – NGINX Plus selects the server with the lowest average latency and the least number of active connections. The method used to calculate lowest average latency depends on which of the following parameters is included on the `least_time` directive:
+    * **Least Time** (NGINX Plus only) – NGINX Plus selects the server with the lowest average latency and the least number of active connections. The method used to calculate lowest average latency depends on which of the following parameters is included on the `least_time` directive:
         * `connect`  – Time to connect to the upstream server
         * `first_byte` – Time to receive the first byte of data
         * `last_byte`  – Time to receive the full response from the server
@@ -145,7 +145,7 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
         }
         ```
 
-    * *Hash* – NGINX selects the server based on a user‑defined key, for example, the source IP address (`$remote_addr`):
+    * **Hash** – NGINX selects the server based on a user‑defined key, for example, the source IP address (`$remote_addr`):
 
         ```
         upstream stream_backend {
@@ -157,7 +157,7 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
         ```
         The `Hash` load‑balancing method is also used to configure session persistence. As the hash function is based on client IP address, connections from a given client are always passed to the same server unless the server is down or otherwise unavailable. Specify an optional `consistent` parameter to apply the `ketama` consistent hashing method: `hash $remote_addr consistent;`
 
-    * *Random* – Each connection will be passed to a randomly selected server. If the two parameter is specified, first, NGINX randomly selects two servers taking into account server weights, and then chooses one of these servers using the specified method:
+    * **Random** – Each connection will be passed to a randomly selected server. If the two parameter is specified, first, NGINX randomly selects two servers taking into account server weights, and then chooses one of these servers using the specified method:
         * `least_conn` – The least number of active connections
         * `least_time=connect` (NGINX Plus) – The time to connect to the upstream server ($upstream_connect_time)
         * `least_time=first_byte` (NGINX Plus) – The least average time to receive the first byte of data from the server ($upstream_first_byte_time)
@@ -171,7 +171,7 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
             server backend4.example.com:12346;
         }
         ```
-The *Random* load balancing method should be used for distributed environments where multiple load balancers are passing requests to the same set of backends. For environments where the load balancer has a full view of all requests, use other load balancing methods, such as round robin, least connections and least time.
+The **Random** load balancing method should be used for distributed environments where multiple load balancers are passing requests to the same set of backends. For environments where the load balancer has a full view of all requests, use other load balancing methods, such as round robin, least connections and least time.
 
 4. Optionally, for each upstream server specify server‑specific parameters including `maximum number of connections`, `server weight`, and so on:
     ```

@@ -58,7 +58,7 @@ For example, you can define three `location` blocks to instruct the virtual serv
 
 NGINX Plus tests request URIs against the parameters of all location directives and applies the directives defined in the matching location. Inside each `location` block, it is usually possible (with a few exceptions) to place even more location directives to further refine the processing for specific groups of requests.
 
-*Note:* In this guide, the word location refers to a single `location` context.
+**Note:** In this guide, the word location refers to a single `location` context.
 
 There are two types of parameter to the `location` directive: prefix strings (pathnames) and regular expressions. For a request URI to match a prefix string, it must start with the prefix string.
 
@@ -90,7 +90,7 @@ Higher priority is given to regular expressions, unless the `^~` modifier is use
     6. Stop processing when the first matching regular expression is found and use the corresponding location.
     7. If no regular expression matches, use the location corresponding to the stored prefix string.
 
-A typical use case for the `=` modifier is requests for */* (forward slash). If requests for / are frequent, specifying `= /` as the parameter to the location directive speeds up processing, because the search for matches stops after the first comparison.
+A typical use case for the `=` modifier is requests for **/** (forward slash). If requests for / are frequent, specifying `= /` as the parameter to the location directive speeds up processing, because the search for matches stops after the first comparison.
 ```
 location = / {
     #...
