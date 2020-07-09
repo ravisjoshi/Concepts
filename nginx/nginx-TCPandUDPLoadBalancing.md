@@ -147,23 +147,23 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
 
     * *Hash* – NGINX selects the server based on a user‑defined key, for example, the source IP address (`$remote_addr`):
 
-```
+    ```
         upstream stream_backend {
             hash $remote_addr;
             server backend1.example.com:12345;
             server backend2.example.com:12345;
             server backend3.example.com:12346;
         }
-```
-The `Hash` load‑balancing method is also used to configure session persistence. As the hash function is based on client IP address, connections from a given client are always passed to the same server unless the server is down or otherwise unavailable. Specify an optional `consistent` parameter to apply the `ketama` consistent hashing method:
+        ```
+        The `Hash` load‑balancing method is also used to configure session persistence. As the hash function is based on client IP address, connections from a given client are always passed to the same server unless the server is down or otherwise unavailable. Specify an optional `consistent` parameter to apply the `ketama` consistent hashing method:
 
         `hash $remote_addr consistent;`
 
-        * *Random* – Each connection will be passed to a randomly selected server. If the two parameter is specified, first, NGINX randomly selects two servers taking into account server weights, and then chooses one of these servers using the specified method:
-            * `least_conn` – The least number of active connections
-            * `least_time=connect` (NGINX Plus) – The time to connect to the upstream server ($upstream_connect_time)
-            * `least_time=first_byte` (NGINX Plus) – The least average time to receive the first byte of data from the server ($upstream_first_byte_time)
-            * `least_time=last_byte` (NGINX Plus) – The least average time to receive the last byte of data from the server ($upstream_session_time)
+    * *Random* – Each connection will be passed to a randomly selected server. If the two parameter is specified, first, NGINX randomly selects two servers taking into account server weights, and then chooses one of these servers using the specified method:
+        * `least_conn` – The least number of active connections
+        * `least_time=connect` (NGINX Plus) – The time to connect to the upstream server ($upstream_connect_time)
+        * `least_time=first_byte` (NGINX Plus) – The least average time to receive the first byte of data from the server ($upstream_first_byte_time)
+        * `least_time=last_byte` (NGINX Plus) – The least average time to receive the last byte of data from the server ($upstream_session_time)
 ```
         upstream stream_backend {
             random two least_time=last_byte;
