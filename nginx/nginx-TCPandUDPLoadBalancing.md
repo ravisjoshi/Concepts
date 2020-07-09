@@ -136,15 +136,17 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
         * `connect`  – Time to connect to the upstream server
         * `first_byte` – Time to receive the first byte of data
         * `last_byte`  – Time to receive the full response from the server
-```
+        ```
         upstream stream_backend {
             least_time first_byte;
             server backend1.example.com:12345;
             server backend2.example.com:12345;
             server backend3.example.com:12346;
         }
-```
+        ```
+
     * *Hash* – NGINX selects the server based on a user‑defined key, for example, the source IP address (`$remote_addr`):
+
 ```
         upstream stream_backend {
             hash $remote_addr;
