@@ -381,12 +381,12 @@ In this example, all TCP and UDP proxy‑related functionality is configured ins
 There are two named `upstream` blocks, each containing three servers that host the same content as one another. In the `server` for each server, the server name is followed by the obligatory port number. Connections are distributed among the servers according to the `Least Connections` load‑balancing method: a connection goes to the server with the fewest number of active connections.
 
 The three `server` blocks define three virtual servers:
-    * The first server listens on port 12345 and proxies all TCP connections to the `stream_backend` group of upstream servers. Note that the `proxy_pass` directive defined in the context of the stream module must not contain a protocol.
+* The first server listens on port 12345 and proxies all TCP connections to the `stream_backend` group of upstream servers. Note that the `proxy_pass` directive defined in the context of the stream module must not contain a protocol.
 
-    * Two optional timeout parameters are specified: the `proxy_connect_timeout` directive sets the timeout required for establishing a connection with a server in the `stream_backend` group. The `proxy_timeout` directive sets a timeout used after proxying to one of the servers in the `stream_backend` group has started.
+* Two optional timeout parameters are specified: the `proxy_connect_timeout` directive sets the timeout required for establishing a connection with a server in the `stream_backend` group. The `proxy_timeout` directive sets a timeout used after proxying to one of the servers in the `stream_backend` group has started.
 
-    * The second server listens on port 53 and proxies all UDP datagrams (the udp parameter to the `listen` directive) to an upstream group called `dns_servers`. If the udp parameter is not specified, the socket listens for TCP connections.
+* The second server listens on port 53 and proxies all UDP datagrams (the udp parameter to the `listen` directive) to an upstream group called `dns_servers`. If the udp parameter is not specified, the socket listens for TCP connections.
 
-    * The third virtual server listens on port 12346 and proxies TCP connections to `backend4.example.com`, which can resolve to several IP addresses that are load balanced with the Round Robin method.
+* The third virtual server listens on port 12346 and proxies TCP connections to `backend4.example.com`, which can resolve to several IP addresses that are load balanced with the Round Robin method.
 
 ----
