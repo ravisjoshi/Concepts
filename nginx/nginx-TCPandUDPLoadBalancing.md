@@ -155,8 +155,7 @@ Make sure that the name of the upstream group is referenced by a `proxy_pass` di
             server backend3.example.com:12346;
         }
         ```
-        The `Hash` load‑balancing method is also used to configure session persistence. As the hash function is based on client IP address, connections from a given client are always passed to the same server unless the server is down or otherwise unavailable. Specify an optional `consistent` parameter to apply the `ketama` consistent hashing method:
-        `hash $remote_addr consistent;`
+    The `Hash` load‑balancing method is also used to configure session persistence. As the hash function is based on client IP address, connections from a given client are always passed to the same server unless the server is down or otherwise unavailable. Specify an optional `consistent` parameter to apply the `ketama` consistent hashing method: `hash $remote_addr consistent;`
 
     * *Random* – Each connection will be passed to a randomly selected server. If the two parameter is specified, first, NGINX randomly selects two servers taking into account server weights, and then chooses one of these servers using the specified method:
         * `least_conn` – The least number of active connections
