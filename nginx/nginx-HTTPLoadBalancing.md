@@ -39,6 +39,7 @@ http {
     }
 }
 ```
+
 ----
 ### Choosing a Load-Balancing Method
 
@@ -113,6 +114,7 @@ The optional `consistent` parameter to the hash directive enables `ketama` consi
 The *Random* load balancing method should be used for distributed environments where multiple load balancers are passing requests to the same set of backends. For environments where the load balancer has a full view of all requests, use other load balancing methods, such as round robin, least connections and least time.
 
 *Note:* When configuring any method other than Round Robin, put the corresponding directive (hash, ip_hash, least_conn, least_time, or random) above the list of server directives in the upstream {} block.
+
 ----
 ### Server Weights
 By default, NGINX distributes requests among the servers in the group according to their weights using the Round Robin method. The `weight` parameter to the `server` directive sets the weight of a server; the default is 1:
