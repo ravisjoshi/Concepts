@@ -25,7 +25,7 @@ Open the NGINX configuration file and perform the following steps:
 ```
 2. Define one or more `server {}` configuration blocks for each virtual server in the top‑level `stream {}` context.
 
-3. Within the `server {}` configuration block for each server, include the listen directive to define the IP address and/or port on which the server listens.
+3. Within the `server {}` configuration block for each server, include the `listen` directive to define the IP address and/or port on which the server listens.
 
 For UDP traffic, also include the `udp` parameter. As TCP is the default protocol for the `stream` context, there is no tcp parameter to the `listen` directive:
 ```
@@ -43,7 +43,7 @@ For UDP traffic, also include the `udp` parameter. As TCP is the default protoco
         # ...
     }
 ```
-4. Include the proxy_pass directive to define the proxied server or an upstream group to which the server forwards traffic:
+4. Include the `proxy_pass` directive to define the proxied server or an upstream group to which the server forwards traffic:
 ```
     stream {
 
@@ -212,81 +212,81 @@ stream {
 Upstream server groups can be easily reconfigured on-the-fly using NGINX Plus REST API. Using this interface, you can view all servers in an upstream group or a particular server, modify server parameters, and add or remove upstream servers.
 
 To enable on-the-fly configuration:
-    1. Create the top-level `http {}` block or make sure it is present in your configuration:
-    ```
-    http {
-        # ...
-    }
-    ```
-    2. Create a location for configuration requests, for example, api:
-    ```
-    http {
-        server {
-            location /api {
-                # ...
-            }
-        }
-    }
-    ```
-    3. In this location specify the `api` directive:
-    ```
-    http {
-        server {
-            location /api {
-                api;
-                # ...
-            }
-        }
-    }
-    ```
-    4. By default, the NGINX Plus API provides read-only access to data. The `write=on` parameter enables read/write access so that changes can be made to upstreams:
-    ```
-    http {
-        server {
-            location /api {
-                api  write=on;
-                # ...
-            }
-        }
-    }
-    ```
-    5. Limit access to this location with allow and deny directives:
-    ```
-    http {
-        server {
-            location /api {
-                api   write=on;
-                allow 127.0.0.1; # permit access from localhost
-                deny  all;       # deny access from everywhere else
-            }
-        }
-    }
-    ```
-    6. When the API is enabled in the write mode, it is recommended restricting access to `PATCH`, `POST`, and `DELETE` methods to particular users. This can be done by implementing HTTP basic authentication:
-    ```
-    http {
-        server {
-            location /api {
-                limit_except GET {
-                    auth_basic "NGINX Plus API";
-                    auth_basic_user_file /path/to/passwd/file;
-                }
-                api   write=on;
-                allow 127.0.0.1;
-                deny  all;
-            }
-        }
-    }
-    ```
-    7. Create a shared memory zone for the group of upstream servers so that all worker processes can use the same configuration. To do this, in the top-level `stream {}` block, find the target upsteam group, add the `zone` directive to the upstream server group and specify the zone name (here, `stream_backend`) and the amount of memory (64 KB):
-    ```
-    stream {
-        upstream stream_backend {
-            zone backend 64k;
+1. Create the top-level `http {}` block or make sure it is present in your configuration:
+```
+http {
+    # ...
+}
+```
+2. Create a location for configuration requests, for example, api:
+```
+http {
+    server {
+        location /api {
             # ...
         }
     }
-    ```
+}
+```
+3. In this location specify the `api` directive:
+```
+http {
+    server {
+        location /api {
+            api;
+            # ...
+        }
+    }
+}
+```
+4. By default, the NGINX Plus API provides read-only access to data. The `write=on` parameter enables read/write access so that changes can be made to upstreams:
+```
+http {
+    server {
+        location /api {
+            api  write=on;
+            # ...
+        }
+    }
+}
+```
+5. Limit access to this location with allow and deny directives:
+```
+http {
+    server {
+        location /api {
+            api   write=on;
+            allow 127.0.0.1; # permit access from localhost
+            deny  all;       # deny access from everywhere else
+        }
+    }
+}
+```
+6. When the API is enabled in the write mode, it is recommended restricting access to `PATCH`, `POST`, and `DELETE` methods to particular users. This can be done by implementing HTTP basic authentication:
+```
+http {
+    server {
+        location /api {
+            limit_except GET {
+                auth_basic "NGINX Plus API";
+                auth_basic_user_file /path/to/passwd/file;
+            }
+            api   write=on;
+            allow 127.0.0.1;
+            deny  all;
+        }
+    }
+}
+```
+7. Create a shared memory zone for the group of upstream servers so that all worker processes can use the same configuration. To do this, in the top-level `stream {}` block, find the target upsteam group, add the `zone` directive to the upstream server group and specify the zone name (here, `stream_backend`) and the amount of memory (64 KB):
+```
+stream {
+    upstream stream_backend {
+        zone backend 64k;
+        # ...
+    }
+}
+```
 
 ----
 
