@@ -1,5 +1,11 @@
 ## nginx
 https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-plus/#
+
+* [Configuring Reverse Proxy](https://github.com/ravisjoshi/Concepts/blob/master/nginx/nginx-TCPandUDPLoadBalancing.md#configuring-reverse-proxy)
+* [Configuring TCP or UDP Load Balancing](https://github.com/ravisjoshi/Concepts/blob/master/nginx/nginx-TCPandUDPLoadBalancing.md#configuring-tcp-or-udp-load-balancing)
+* [On-the-Fly Configuration](https://github.com/ravisjoshi/Concepts/blob/master/nginx/nginx-TCPandUDPLoadBalancing.md#on-the-fly-configuration)
+* [On-the-Fly Configuration Example](https://github.com/ravisjoshi/Concepts/blob/master/nginx/nginx-TCPandUDPLoadBalancing.md#on-the-fly-configuration-example)
+
 ----
 ### Prerequisites
 * Latest NGINX Plus (no extra build steps required) or latest NGINX Open Source built with the --with-stream configuration flag

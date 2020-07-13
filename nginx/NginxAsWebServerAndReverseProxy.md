@@ -1,6 +1,33 @@
-## Configuring NGINX and NGINX Plus as a Web Server
-https://docs.nginx.com/nginx/admin-guide/web-server/web-server/
 
+# Nginx server setup
+* [Configuring NGINX and NGINX Plus as a Web Server](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#configuring-nginx-and-nginx-plus-as-a-web-server)
+    * [Setting Up Virtual Servers](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#setting-up-virtual-servers)
+    * [Configuring Locations](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#configuring-locations)
+    * [NGINX Location Priority](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#nginx-location-priority)
+    * [Using Variables](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#using-variables)
+    * [Returning Specific Status Codes](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#returning-specific-status-codes)
+    * [Rewriting URIs in Requests](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#rewriting-uris-in-requests)
+    * [Rewriting HTTP Responses](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#rewriting-http-responses)
+    * [Handling Errors](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#handling-errors)
+* [Serving Static Content](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#serving-static-content)
+    * [Root Directory and Index Files](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#root-directory-and-index-files)
+    * [Trying Several Options](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#trying-several-options)
+    * [Optimizing Performance for Serving Content](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#optimizing-performance-for-serving-content)
+    * [Enabling sendfile](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#enabling-sendfile)
+    * [Enabling tcp_nopush](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#enabling-tcp_nopush)
+    * [Enabling tcp_nodelay](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#enabling-tcp_nodelay)
+    * [Optimizing the Backlog Queue](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#optimizing-the-backlog-queue)
+    * [Tuning the Operating System](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#tuning-the-operating-system)
+    * [Tuning NGINX](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#tuning-nginx)
+* [NGINX Reverse Proxy](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#nginx-reverse-proxy)
+    * [Passing a Request to a Proxied Server](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#passing-a-request-to-a-proxied-server)
+    * [Passing Request Headers](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#passing-request-headers)
+    * [Configuring Buffers](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#configuring-buffers)
+    * [Choosing an Outgoing IP Address](https://github.com/ravisjoshi/Concepts/blob/master/nginx/NginxAsWebServerAndReverseProxy.md#choosing-an-outgoing-ip-address)
+
+
+https://docs.nginx.com/nginx/admin-guide/web-server/web-server/
+## Configuring NGINX and NGINX Plus as a Web Server
 ### Setting Up Virtual Servers
 
 The NGINX Plus configuration file must include at least one `server` directive to define a virtual server. When NGINX Plus processes a request, it first selects the virtual server that will serve the request.
